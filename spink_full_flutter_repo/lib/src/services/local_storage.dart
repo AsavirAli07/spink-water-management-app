@@ -1,0 +1,1 @@
+class LocalStorage { static Future<void> init() async {} }

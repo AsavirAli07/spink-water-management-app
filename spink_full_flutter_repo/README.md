@@ -1,0 +1,1 @@
+This repo is ready to upload. Push to GitHub main and Actions will build a debug APK artifact.
