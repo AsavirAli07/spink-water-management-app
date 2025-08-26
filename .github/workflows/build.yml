@@ -1,37 +1,33 @@
-name: Build APK
+name: Flutter CI
 
 on:
-  push:
-    branches: [ "main" ]
   workflow_dispatch:
+  push:
+    branches: [ main ]
 
 jobs:
   build:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v3
+      - name: Checkout repository
+        uses: actions/checkout@v4   # ✅ latest version
 
-    - name: Set up JDK 17
-      uses: actions/setup-java@v3
-      with:
-        java-version: '17'
-        distribution: 'temurin'
+      - name: Install Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.24.0'
 
-    - name: Install Flutter
-      uses: subosito/flutter-action@v2
-      with:
-        flutter-version: '3.24.0'   # latest stable
+      - name: Get dependencies
+        run: flutter pub get
+        working-directory: spin_full_flutter_repo   # 👈 run inside folder
 
-    - name: Get dependencies
-      run: flutter pub get
+      - name: Build APK
+        run: flutter build apk --debug
+        working-directory: spin_full_flutter_repo   # 👈 run inside folder
 
-    - name: Build APK
-      run: flutter build apk --debug
-
- - name: Upload APK
-      uses: actions/upload-artifact@v3
-      with:
-        name: spink-app-debug
-        path: build/app/outputs/apk/debug/app-debug.apk
+      - name: Upload APK
+        uses: actions/upload-artifact@v4   # ✅ latest version
+        with:
+          name: spink-app-debug
+          path: spin_full_flutter_repo/build/app/outputs/flutter-apk/app-debug.apk
